@@ -22,4 +22,7 @@ jobs:
         dotnet-version: 6.0.x
     - name: Build
       run: dotnet build MeallyApp
-
+    - name: Create the package
+      run: dotnet pack --configuration Release MeallyApp
+    - name: Publish the package to GPR
+      run: dotnet nuget push MeallyApp/bin/Release/*.nupkg
