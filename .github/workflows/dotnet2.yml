@@ -20,9 +20,12 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+#         source-url: https://nuget.pkg.github.com/CyanKingRS/index.json
+#       env:
+#         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Build
       run: dotnet build MeallyApp
-    - name: Create the package
-      run: dotnet pack --configuration Release MeallyApp
-    - name: Publish the package to GPR
-      run: dotnet nuget push MeallyApp/bin/Release/*.nupkg
+#     - name: Create the package
+#       run: dotnet pack --configuration Release MeallyApp
+#     - name: Publish the package to GPR
+#       run: dotnet nuget push MeallyApp/bin/Release/*.nupkg
