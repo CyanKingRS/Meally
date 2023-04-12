@@ -2,9 +2,11 @@
 {
     public class Recipe : IComparable<Recipe>
     {
+
+        public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<Ingredient> Ingredients;
+        public List<Ingredient> Ingredients { get; set; }
         public string RecipeInstructions { get; set; }
 
         public string Image { get; set;}

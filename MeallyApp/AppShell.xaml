@@ -5,13 +5,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MeallyApp"
     Shell.TabBarIsVisible="False"
-    BackgroundColor="#FFC439"
-    FlyoutBackgroundColor="#FFC439">
+    Shell.BackgroundColor="#FAF9F7"
+    FlyoutBackgroundColor="#FFC439"
+    Shell.ForegroundColor="#231F20"
+    Shell.TitleColor="#231F20">
 
     <Shell.FlyoutHeader>
         <Label Text="Meally" FontSize="50" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,25,0,25"/>
     </Shell.FlyoutHeader>
-
+    
     <ShellContent
             Title="Main"
             ContentTemplate="{DataTemplate local:MainPage}"
@@ -26,6 +28,5 @@
         Title="About"
         ContentTemplate="{DataTemplate local:AboutPage}"
         Route="AboutPage" />
-
 
 </Shell>

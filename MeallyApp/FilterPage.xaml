@@ -5,31 +5,28 @@
              xmlns:model="clr-namespace:MeallyApp.Resources.Ingredients"
              xmlns:viewmodel="clr-namespace:MeallyApp.Resources.ViewIngredients"
              xmlns:Converter="clr-namespace:MeallyApp.Resources.Converters"
-             x:DataType="viewmodel:RecipeViewModel"
-             Title="Recipes">
+             x:DataType="viewmodel:RecipeViewModel">
 
     <ContentPage.Resources>
         <Converter:DoubleToPercentageConverter x:Key="DoubleToPercentage"/>
     </ContentPage.Resources>
-    
+
+    <Shell.TitleView>
+        <Label Text="{Binding Title}" FontFamily="OpenSansSemibold" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" TextColor="#231F20" FontSize="Title"  Margin="50,0,0,5"/>
+    </Shell.TitleView>
+
     <Grid Padding="0,0,0,0"
-          RowDefinitions="100,*"
+          RowDefinitions="60,60,*"
           RowSpacing="0">
 
-        <Button Grid.Row="0"
-                Margin="20,0,20,0"
-                HeightRequest="50"
-                Text="Load" TextColor="#231F20" 
-                CornerRadius="10" 
-                BackgroundColor="#FFC439" 
-                Clicked="RecipeButton_OnClicked"/>
+        <SearchBar Placeholder="Search..." SearchButtonPressed="SearchBar_SearchButtonPressed"/>
 
-        <ActivityIndicator x:Name="Loader" Grid.RowSpan="2" HeightRequest="100" WidthRequest="100"/>
+        <ActivityIndicator x:Name="Loader" Grid.Row="2" Grid.RowSpan="2" HeightRequest="100" WidthRequest="100"/>
 
         <CollectionView x:Name="RecipeCollectionView"
                         ItemsSource="{Binding Recipes}"
                         BackgroundColor="Transparent"
-                        Grid.Row="1">
+                        Grid.Row="2">
             
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Recipe">
@@ -37,21 +34,30 @@
                     <!-- Template for CollectionView of Recipes -->
                     <Frame CornerRadius="10"
                            Grid.Row="1"
-                           HeightRequest="150"
-                           WidthRequest="350"
-                           Margin="0,0,0,10">
+                           MinimumHeightRequest="150"
+                           MinimumWidthRequest="350"
+                           MaximumHeightRequest="300"
+                           BackgroundColor="#F5F5F5"
+                           Margin="25,0,25,10">
 
-                        <Grid HeightRequest="150" 
-                              WidthRequest="350"
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipeViewModel}}, Path=TapCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+
+                        <Grid MinimumHeightRequest="150"
+                              MinimumWidthRequest="350"
+                              MaximumHeightRequest="300"
                               ColumnDefinitions="150,150,*"
                               RowDefinitions="50,70,20,*"
+                              BackgroundColor="Transparent"
                               RowSpacing="0">
 
-                            <Frame CornerRadius="10" HeightRequest="120" WidthRequest="125" BackgroundColor="Transparent" Grid.Column="0" Grid.RowSpan="4">
-                                <Image Source="{Binding Image}" HeightRequest="130" WidthRequest="130"/>
+                            <Frame CornerRadius="10" HeightRequest="120" WidthRequest="125" Grid.Column="0" Grid.RowSpan="4" BackgroundColor="Transparent">
+                                <Image Source="{Binding Image}" Aspect="AspectFill"/>
                             </Frame>
 
-                            <Label Grid.Column="1" Grid.Row="0" TextColor="Black" Text="{Binding Name}" Margin="0,12,0,0" FontAttributes="Bold" FontSize="18" LineBreakMode="MiddleTruncation"/>
+                            <Label Grid.Column="1" Grid.Row="0" TextColor="#231F20" Text="{Binding Name}" Margin="0,12,0,0" FontAttributes="Bold" FontSize="18" LineBreakMode="MiddleTruncation"/>
 
                             <Label Text="{Binding RecipeInstructions}"
                                    HorizontalOptions="Start"
@@ -59,11 +65,12 @@
                                    Grid.Column="1"
                                    Grid.ColumnSpan="2"
                                    Grid.RowSpan="2"
+                                   LineBreakMode="MiddleTruncation"
                                    Margin="0,0,20,20"
-                                   TextColor="Black"
+                                   TextColor="#231F20"
                             />
 
-                            <Label TextColor="Black" Text="{Binding Compatibility, Converter={StaticResource DoubleToPercentage}}" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,0,0"/>
+                            <Label TextColor="#231F20" Text="{Binding Compatibility, Converter={StaticResource DoubleToPercentage}}" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,0,0"/>
                         </Grid>
                     </Frame>
                     <!-- Template end -->

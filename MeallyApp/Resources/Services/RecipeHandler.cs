@@ -1,72 +1,78 @@
-﻿using MeallyApp.Resources.Ingredients;
+﻿using MeallyApp.Resources.EventArguments;
+using MeallyApp.Resources.Ingredients;
 using MeallyApp.UserData;
 using Newtonsoft.Json;
 using Npgsql;
 
 namespace MeallyApp.Resources.Services
 {
-    public static class RecipeHandler
+    public class RecipeHandler : IRecipeHandler
     {
         // This is a list of all recipes
-        // Generic
-        public static List<Recipe> database = new List<Recipe>();
 
-        // This is path to database file
-        public static string DBPath = null;
+        private List<Recipe> database = new List<Recipe>();
 
+        public IDatabaseConnection dbConnection;
 
-        // Get recipes from database
-        public static async Task GetDBAsync()
+        public RecipeHandler(IDatabaseConnection databaseConnection)
         {
-            RecipeHandler.database.Clear();
-         
-            // Setup bit.io database connection
-            var bitHost = "db.bit.io";
-            var bitUser = "";
-            var bitDbName = "LorryGailius/Meally";
-            var bitApiKey = "v2_3usyy_JDfAYxxp5xTy6SgPPGEiZF4";
+            dbConnection = databaseConnection;
+        }
 
-            var cs = $"Host={bitHost};Username={bitUser};Password={bitApiKey};Database={bitDbName}";
+        public async Task GetRecipesFromDB()
+        {
+            await dbConnection.GetDBAsync();
+            database = dbConnection.GetRecipeList();
+        }
 
-            using var con = new NpgsqlConnection(cs);
+        public async Task GetRecipesAPI()
+        {
+            var client = new HttpClient();
 
-            await con.OpenAsync();
-            con.TypeMapper.UseJsonNet();
-            using (var cmd = new NpgsqlCommand(@"SELECT json_build_object('Name', Name, 'Image', Image, 'Compatibility', Compatibility, 'RecipeInstructions', RecipeInstructions, 'Ingredients', Ingredients) FROM ""Recipes"";", con))
-            using (var reader = await cmd.ExecuteReaderAsync())
+            string url = $"{User.BaseUrl}/api/food/getrecipes";
+            client.BaseAddress = new Uri(url);
+            HttpResponseMessage respone = await client.GetAsync("");
+            if (respone.IsSuccessStatusCode)
             {
-                while (await reader.ReadAsync())
-                {
-                    var temp = reader.GetFieldValue<Recipe>(0);
-                    database.Add(temp);
-                }
+                string content = respone.Content.ReadAsStringAsync().Result;
+                database = JsonConvert.DeserializeObject<List<Recipe>>(content);
             }
-            con.Close();
         }
 
         // Set Compatibility rating on Recipe list
-        public static void SetComp(List<Ingredient> userIngredients)
+        public void SetComp(List<Ingredient> userIngredients)
         {
-            foreach (var recipe in database)
+            if (database != null)
             {
-                var missingIngredients = recipe.Ingredients.Where(a => !User.inventory.Exists(b => b.ingredient.Equals(a.ingredient))).ToList();
+                foreach (var recipe in database)
+                {
+                    var missingIngredients = recipe.Ingredients.Where(a => !User.inventory.Exists(b => b.DisplayName.Equals(a.DisplayName))).ToList();
 
-                double recipeCount = recipe.Ingredients.Count;
-                double missingCount = missingIngredients.Count;
+                    double recipeCount = recipe.Ingredients.Count;
+                    double missingCount = missingIngredients.Count;
 
-                recipe.Compatibility = Math.Round((recipeCount - missingCount) / recipeCount,2);
+                    recipe.Compatibility = Math.Round((recipeCount - missingCount) / recipeCount, 2);
+                }
             }
+
         }
 
         // Order list of recipes by compatibility
         // LINQ to Objects usage (methods and queries)
-        public static void OrderDB()
+        public void OrderDB()
         {
-            database = database.OrderByDescending(x => x.Compatibility).ToList();
+            if (database != null)
+            {
+                List<Recipe> tempList = database.OrderByDescending(x => x.Compatibility).ToList();
+                for (int i = 0; i < database.Count; i++)
+                {
+                    database[i] = tempList[i];
+                }
+            }
         }
 
         // Print all recipes in database
-        public static void PrintDB()
+        public void PrintDB()
         {
             foreach (var recipe in database)
             {
@@ -76,17 +82,22 @@ namespace MeallyApp.Resources.Services
             }
         }
 
-        // 4. Extension method usage for recipe
-        public static void PrintRecipe(this Recipe recipe)
-        {
-            Console.WriteLine($"[Name: {recipe.Name}] [Compatibility: {recipe.Compatibility}]\n");
-            recipe.Ingredients.ForEach(i => Console.Write("{0}\t", i));
-            Console.WriteLine("\n\n");
-        }
-
-        public static async Task<List<Recipe>> GetRecipeList()
+        public List<Recipe> GetRecipeList()
         {
             return new List<Recipe>(database);
+        }
+
+        public async Task SearchForRecipes(string Text)
+        {
+            var client = new HttpClient();
+            string url = $"{User.BaseUrl}/api/food/searchrecipes/{Text}";
+            client.BaseAddress = new Uri(url);
+            HttpResponseMessage respone = await client.GetAsync("");
+            if (respone.IsSuccessStatusCode)
+            {
+                string content = respone.Content.ReadAsStringAsync().Result;
+                database = JsonConvert.DeserializeObject<List<Recipe>>(content);
+            }
         }
 
     }
