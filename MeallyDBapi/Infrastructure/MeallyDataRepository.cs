@@ -4,12 +4,16 @@ using RecipeDatabaseDomain.Models;
 using RecipeDatabaseDomain.ViewModels;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using FuzzySharp;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MeallyDBapi.Infrastructure
 {
     public class MeallyDataRepository : IMeallyDataRepository
     {
         private readonly RecipeContext context;
+
 
         public MeallyDataRepository(RecipeContext context)
         {
@@ -19,6 +23,31 @@ namespace MeallyDBapi.Infrastructure
         public List<Ingredient> GetAllIngredients()
         {
             return context.Ingredients.Where(x => x.Id > 0).ToList();
+        }
+
+        public List<RecipeViewModel> SearchForRecipes(string text)
+        {
+
+            // Use entity names and sentiment to search the database
+
+            List<Recipe> recipes = new();
+
+            recipes = context.Recipes.ToList();
+
+            var filteredRecipes = recipes.Where(p =>
+                 FuzzySharp.Fuzz.PartialTokenSetRatio(p.Name.ToLower(), text.ToLower()) > 80 || 
+                 (p.RecipeIngredients != null && p.RecipeIngredients.Any(i => FuzzySharp.Fuzz.PartialTokenSetRatio(i.ToString().ToLower(), text.ToLower()) > 80)) || 
+                 FuzzySharp.Fuzz.PartialTokenSetRatio(p.RecipeInstructions.ToLower(), text.ToLower()) > 80
+                ).ToList();
+            List<RecipeViewModel> recipeViewModels = new List<RecipeViewModel>();
+
+            for (int i = 0; i < filteredRecipes.Count; i++)
+            {
+                List<Ingredient> ingredients = GetRecipeIngredients(filteredRecipes[i].Id);
+                recipeViewModels.Add(new RecipeViewModel(filteredRecipes[i], ingredients));
+            }
+
+            return recipeViewModels;
         }
 
         public List<RecipeViewModel> GetAllRecipes()

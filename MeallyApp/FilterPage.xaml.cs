@@ -77,10 +77,26 @@ public partial class FilterPage : ContentPage
         }
     }
 
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
 
         Load_Recipes();
+    }
+
+    private async void SearchBar_SearchButtonPressed(object sender, EventArgs e)
+    {
+        if (!Loader.IsRunning)
+        {
+            Loader.IsRunning = true;
+            SearchBar searchBar = (SearchBar)sender;
+            await recipeHandler.SearchForRecipes(searchBar.Text);
+            recipeHandler.SetComp(User.inventory);
+            recipeHandler.OrderDB();
+            Loader.IsRunning = false;
+            ViewModel.GetRecipesCommand.Execute(this);
+        }
+
     }
 }

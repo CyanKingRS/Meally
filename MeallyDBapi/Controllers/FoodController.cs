@@ -33,5 +33,11 @@ namespace MeallyDBapi.Controllers
         {
             return Ok(_meallyDataRepository.GetRecipe(id));
         }
+
+        [HttpGet("SearchRecipes/{text}")]
+        public IActionResult SearchForRecipes(string text)
+        {
+            return Ok(_meallyDataRepository.SearchForRecipes(text));
+        }
     }
 }

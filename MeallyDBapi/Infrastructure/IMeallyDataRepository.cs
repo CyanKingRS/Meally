@@ -9,6 +9,8 @@ namespace MeallyDBapi.Infrastructure
 
         public List<RecipeViewModel> GetAllRecipes();
 
+        public List<RecipeViewModel> SearchForRecipes(string text);
+
         public void RegisterUser(UserAccount userAccount);
 
 

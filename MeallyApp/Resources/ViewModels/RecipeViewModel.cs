@@ -15,6 +15,8 @@ namespace MeallyApp.Resources.ViewIngredients
 
         public Command GetRecipesCommand { get; }
 
+
+
         public RecipeViewModel(IExceptionLogger logger, IRecipeHandler recipeHandler)
         {
             Title = "Recipes";
@@ -60,6 +62,6 @@ namespace MeallyApp.Resources.ViewIngredients
         {
             await Shell.Current.GoToAsync($"{nameof(RecipePage)}",true , new Dictionary<string, object> { ["Recipe"] = recipe });
         }
-        
+
     }
 }

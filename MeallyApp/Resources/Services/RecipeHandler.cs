@@ -42,15 +42,17 @@ namespace MeallyApp.Resources.Services
         // Set Compatibility rating on Recipe list
         public void SetComp(List<Ingredient> userIngredients)
         {
-
-            foreach (var recipe in database)
+            if (database != null)
             {
-                var missingIngredients = recipe.Ingredients.Where(a => !User.inventory.Exists(b => b.DisplayName.Equals(a.DisplayName))).ToList();
+                foreach (var recipe in database)
+                {
+                    var missingIngredients = recipe.Ingredients.Where(a => !User.inventory.Exists(b => b.DisplayName.Equals(a.DisplayName))).ToList();
 
-                double recipeCount = recipe.Ingredients.Count;
-                double missingCount = missingIngredients.Count;
+                    double recipeCount = recipe.Ingredients.Count;
+                    double missingCount = missingIngredients.Count;
 
-                recipe.Compatibility = Math.Round((recipeCount - missingCount) / recipeCount,2);
+                    recipe.Compatibility = Math.Round((recipeCount - missingCount) / recipeCount, 2);
+                }
             }
 
         }
@@ -59,10 +61,13 @@ namespace MeallyApp.Resources.Services
         // LINQ to Objects usage (methods and queries)
         public void OrderDB()
         {
-            List<Recipe> tempList = database.OrderByDescending(x => x.Compatibility).ToList();
-            for (int i = 0; i < database.Count; i++)
+            if (database != null)
             {
-                database[i] = tempList[i];
+                List<Recipe> tempList = database.OrderByDescending(x => x.Compatibility).ToList();
+                for (int i = 0; i < database.Count; i++)
+                {
+                    database[i] = tempList[i];
+                }
             }
         }
 
@@ -80,6 +85,19 @@ namespace MeallyApp.Resources.Services
         public List<Recipe> GetRecipeList()
         {
             return new List<Recipe>(database);
+        }
+
+        public async Task SearchForRecipes(string Text)
+        {
+            var client = new HttpClient();
+            string url = $"{User.BaseUrl}/api/food/searchrecipes/{Text}";
+            client.BaseAddress = new Uri(url);
+            HttpResponseMessage respone = await client.GetAsync("");
+            if (respone.IsSuccessStatusCode)
+            {
+                string content = respone.Content.ReadAsStringAsync().Result;
+                database = JsonConvert.DeserializeObject<List<Recipe>>(content);
+            }
         }
 
     }
