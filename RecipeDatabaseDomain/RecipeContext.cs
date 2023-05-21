@@ -26,6 +26,10 @@ namespace RecipeDatabaseDomain
 
         public DbSet<UserIngredient> UserIngredients { get; set; }
 
+        public DbSet<Label> Labels { get; set; }
+
+        public DbSet<RecipeLabel> RecipeLabels { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MeallyRecipeDatabase;Trusted_Connection=True;");

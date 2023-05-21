@@ -13,10 +13,17 @@
 
         public double Compatibility { get; set; } = 0;
 
-        public Recipe(string name, List<Ingredient> ingredients, string recipeInstructions, string recipeImage = "place_holder.png")
+        public DateTime RecipeUploadDate { get; set; }
+
+        public TimeSpan RecipeMakeTime { get; set; }
+
+        public List<Label> Labels { get; set; }
+
+        public Recipe(string name, List<Ingredient> ingredients, List<Label> labels, string recipeInstructions, string recipeImage = "place_holder.png")
         {
             Name = name;
             this.Ingredients = ingredients;
+            Labels = labels;
             RecipeInstructions = recipeInstructions;
         }
 

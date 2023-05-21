@@ -23,5 +23,11 @@ namespace RecipeDatabaseDomain.Models
 
         public ICollection<RecipeIngredient>? RecipeIngredients { get; set; }
 
+        [Required]
+        public TimeSpan RecipeMakeTime { get; set; }
+
+        [Required]
+        public DateTime RecipeUploadDate { get; set; }
+
     }
 }
