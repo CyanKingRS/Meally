@@ -35,9 +35,9 @@ namespace MeallyDBapi.Infrastructure
             recipes = context.Recipes.ToList();
 
             var filteredRecipes = recipes.Where(p =>
-                 FuzzySharp.Fuzz.PartialTokenSetRatio(p.Name.ToLower(), text.ToLower()) > 80 || 
-                 (p.RecipeIngredients != null && p.RecipeIngredients.Any(i => FuzzySharp.Fuzz.PartialTokenSetRatio(i.ToString().ToLower(), text.ToLower()) > 80)) || 
-                 FuzzySharp.Fuzz.PartialTokenSetRatio(p.RecipeInstructions.ToLower(), text.ToLower()) > 80
+                 FuzzySharp.Fuzz.PartialTokenSetRatio(p.Name.ToLower(), text.ToLower()) > 60 ||
+                 //(p.RecipeIngredients != null && p.RecipeIngredients.Any(i => FuzzySharp.Fuzz.PartialTokenSetRatio(i.ToString().ToLower(), text.ToLower()) > 80)) ||
+                 FuzzySharp.Fuzz.PartialTokenSetRatio(p.RecipeInstructions.ToLower(), text.ToLower()) > 60
                 ).ToList();
             List<RecipeViewModel> recipeViewModels = new List<RecipeViewModel>();
 
