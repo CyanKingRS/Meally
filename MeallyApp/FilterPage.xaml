@@ -71,6 +71,37 @@
                             />
 
                             <Label TextColor="#231F20" Text="{Binding Compatibility, Converter={StaticResource DoubleToPercentage}}" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,0,0"/>
+
+                            <CollectionView BackgroundColor="Transparent"
+                                            ItemsLayout="VerticalGrid"
+                                            ItemsSource="{Binding Labels}"
+                                            Grid.Column="3"
+                                            Grid.Row="3"
+                                            Grid.ColumnSpan="2"
+                                            Margin="0,0,0,0"
+                                            InputTransparent="True">
+                                <CollectionView.Header>
+                                    <StackLayout>
+                                        <Label Text="Labels:" TextColor="Black"/>
+                                    </StackLayout>
+                                </CollectionView.Header>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid BackgroundColor="#FFC439" WidthRequest="35" HeightRequest="15">
+                                            <Label Text="{Binding Name}" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="End" Margin="0,0,0,0"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                            
+                            <Label TextColor="Black"  Grid.Row="4" Grid.Column="4" VerticalTextAlignment="End" HorizontalTextAlignment="End">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Time to make: "/>
+                                        <Span Text="{Binding RecipeMakeTime}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
                         </Grid>
                     </Frame>
                     <!-- Template end -->

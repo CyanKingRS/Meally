@@ -3,6 +3,7 @@ using MeallyApp.Resources.Ingredients;
 using MeallyApp.UserData;
 using Newtonsoft.Json;
 using Npgsql;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MeallyApp.Resources.Services
 {
@@ -11,6 +12,8 @@ namespace MeallyApp.Resources.Services
         // This is a list of all recipes
 
         private List<Recipe> database = new List<Recipe>();
+
+        private List<Ingredients.Label> labels = new();
 
         public IDatabaseConnection dbConnection;
 
@@ -98,6 +101,22 @@ namespace MeallyApp.Resources.Services
                 string content = respone.Content.ReadAsStringAsync().Result;
                 database = JsonConvert.DeserializeObject<List<Recipe>>(content);
             }
+        }
+
+        public async Task<List<Ingredients.Label>> GetLabels()
+        {
+            var client = new HttpClient();
+            string url = $"{User.BaseUrl}/api/food/getlabels";
+            client.BaseAddress = new Uri(url);
+            HttpResponseMessage response = await client.GetAsync("");
+            if (response.IsSuccessStatusCode)
+            {
+                string content = response.Content.ReadAsStringAsync().Result;
+                labels = JsonConvert.DeserializeObject<List<Ingredients.Label>>(content);
+                return labels;
+            }
+            else
+            { return labels; }
         }
 
     }

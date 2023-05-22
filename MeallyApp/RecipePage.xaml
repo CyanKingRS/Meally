@@ -32,8 +32,33 @@
              VerticalOptions="Center"
              HorizontalOptions="Center" />
 
-            <Label Text="{Binding Recipe.Compatibility, Converter={StaticResource DoubleToPercentage}}" TextColor="#231F20" FontSize="Body"
-            HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,8"/>
+            <Label Text="Labels:" TextColor="Black" FontSize="Subtitle"/>
+
+            <CollectionView BackgroundColor="Transparent"
+                            ItemsLayout="VerticalGrid"
+                            ItemsSource="{Binding Recipe.Labels}"
+                            InputTransparent="True">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Label">
+                        <Grid BackgroundColor="#FFC439" WidthRequest="35" HeightRequest="15">
+                            <Label Text="{Binding Name}" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label TextColor="#231F20" FontSize="Body"
+            HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,8">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Compatibility: "/>
+                        <Span Text="{Binding Recipe.Compatibility, Converter={StaticResource DoubleToPercentage}}"/>
+                        <Span Text="    "/>
+                        <Span Text="Time To Make: "/>
+                        <Span Text="{Binding Recipe.RecipeMakeTime}"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
 
             <Frame CornerRadius="10"
                    BackgroundColor="#F5F5F5">
@@ -44,7 +69,8 @@
                             BackgroundColor="Transparent"
                             ItemsLayout="VerticalGrid, 3"
                             ItemsSource="{Binding Ingredients}"
-                            SelectionMode="None">
+                            SelectionMode="None"
+                            InputTransparent="True">
 
                 <CollectionView.ItemTemplate>
 

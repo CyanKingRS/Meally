@@ -28,7 +28,8 @@ namespace RecipeDatabaseDomain
 
         public DbSet<Label> Labels { get; set; }
 
-        public DbSet<RecipeLabel> RecipeLabels { get; set; }
+        public DbSet<LabelRecipe> LabelRecipes { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -24,6 +24,8 @@ namespace MeallyDBapi.Infrastructure
 
         public List<Ingredient> GetRecipe(int id);
 
+        public List<Label> GetLabels();
 
+        public bool UploadRecipe(NewRecipe request);
     }
 }

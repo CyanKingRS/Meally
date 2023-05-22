@@ -7,6 +7,9 @@
         public string Name { get; set; }
 
         public List<Ingredient> Ingredients { get; set; }
+
+        public List<Label> Labels { get; set; }
+
         public string RecipeInstructions { get; set; }
 
         public string Image { get; set;}
@@ -17,13 +20,11 @@
 
         public TimeSpan RecipeMakeTime { get; set; }
 
-        public List<Label> Labels { get; set; }
-
         public Recipe(string name, List<Ingredient> ingredients, List<Label> labels, string recipeInstructions, string recipeImage = "place_holder.png")
         {
             Name = name;
             this.Ingredients = ingredients;
-            Labels = labels;
+            this.Labels = labels;
             RecipeInstructions = recipeInstructions;
         }
 

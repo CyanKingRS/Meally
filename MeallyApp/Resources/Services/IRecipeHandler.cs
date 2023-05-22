@@ -17,5 +17,7 @@ namespace MeallyApp.Resources.Services
         public void OrderDB();
         public void PrintDB();
         public List<Recipe> GetRecipeList();
+
+        public Task<List<Ingredients.Label>> GetLabels();
     }
 }

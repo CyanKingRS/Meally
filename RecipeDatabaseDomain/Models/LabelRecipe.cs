@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RecipeDatabaseDomain.Models
 {
-    public class RecipeLabel
+    public class LabelRecipe
     {
         [Key]
-        public int RecipeLabelId { get; set; }
+        public int Id { get; set; }
         [Required]
-        public int RecipeId { get; set; }
+        public int RecipeID { get; set; }
+        [Required]
+        public int LabelID { get; set; }
 
-        [Required]
-        public int LabelId { get; set; }
     }
 }

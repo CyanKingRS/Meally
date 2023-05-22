@@ -59,6 +59,27 @@ namespace RecipeDatabaseDomain.Migrations
                     b.ToTable("Labels");
                 });
 
+            modelBuilder.Entity("RecipeDatabaseDomain.Models.LabelRecipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LabelID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeID");
+
+                    b.ToTable("LabelRecipes");
+                });
+
             modelBuilder.Entity("RecipeDatabaseDomain.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
@@ -113,25 +134,6 @@ namespace RecipeDatabaseDomain.Migrations
                     b.ToTable("RecipeIngredients");
                 });
 
-            modelBuilder.Entity("RecipeDatabaseDomain.Models.RecipeLabel", b =>
-                {
-                    b.Property<int>("RecipeLabelId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeLabelId"));
-
-                    b.Property<int>("LabelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipeLabelId");
-
-                    b.ToTable("RecipeLabels");
-                });
-
             modelBuilder.Entity("RecipeDatabaseDomain.Models.UserAccount", b =>
                 {
                     b.Property<int>("UserID")
@@ -184,6 +186,15 @@ namespace RecipeDatabaseDomain.Migrations
                     b.ToTable("UserIngredients");
                 });
 
+            modelBuilder.Entity("RecipeDatabaseDomain.Models.LabelRecipe", b =>
+                {
+                    b.HasOne("RecipeDatabaseDomain.Models.Recipe", null)
+                        .WithMany("LabelRecipes")
+                        .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RecipeDatabaseDomain.Models.RecipeIngredient", b =>
                 {
                     b.HasOne("RecipeDatabaseDomain.Models.Recipe", null)
@@ -195,6 +206,8 @@ namespace RecipeDatabaseDomain.Migrations
 
             modelBuilder.Entity("RecipeDatabaseDomain.Models.Recipe", b =>
                 {
+                    b.Navigation("LabelRecipes");
+
                     b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618

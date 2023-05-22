@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
+using RecipeDatabaseDomain.Models;
+using System.Drawing.Printing;
 
 namespace MeallyDBapi.Controllers
 {
@@ -38,6 +41,27 @@ namespace MeallyDBapi.Controllers
         public IActionResult SearchForRecipes(string text)
         {
             return Ok(_meallyDataRepository.SearchForRecipes(text));
+        }
+
+        [HttpGet("GetLabels")]
+        public IActionResult GetLabels()
+        {
+            return Ok(_meallyDataRepository.GetLabels());
+        }
+
+        [HttpPost("UploadRecipe")]
+        public IActionResult UploadRecipe([FromBody] NewRecipe request)
+        {
+            bool result = _meallyDataRepository.UploadRecipe(request);
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
