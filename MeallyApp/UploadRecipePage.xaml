@@ -105,7 +105,7 @@
                CornerRadius="10">
                 <CollectionView x:Name="LabelView"
                             BackgroundColor="Transparent"
-                            ItemsLayout="VerticalGrid, 10"
+                            ItemsLayout="HorizontalList"
                             ItemsSource="{Binding LabelsCollection}"
                             SelectionMode="Multiple">
                     <CollectionView.ItemTemplate>

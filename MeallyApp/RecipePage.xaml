@@ -34,18 +34,23 @@
 
             <Label Text="Labels:" TextColor="Black" FontSize="Subtitle"/>
 
-            <CollectionView BackgroundColor="Transparent"
-                            ItemsLayout="VerticalGrid"
-                            ItemsSource="{Binding Recipe.Labels}"
-                            InputTransparent="True">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Label">
-                        <Grid BackgroundColor="#FFC439" WidthRequest="35" HeightRequest="15">
-                            <Label Text="{Binding Name}" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <Frame Margin="0,0,0,0"
+               BackgroundColor="#F5F5F5"
+               CornerRadius="10">
+                <CollectionView BackgroundColor="Transparent"
+                                ItemsLayout="HorizontalList"
+                                ItemsSource="{Binding Recipe.Labels}"
+                                InputTransparent="True">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Label">
+                            <Grid BackgroundColor="#FFC439" WidthRequest="35" HeightRequest="20">
+                                <Label Text="{Binding Name}" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Frame>
+
 
             <Label TextColor="#231F20" FontSize="Body"
             HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,8">

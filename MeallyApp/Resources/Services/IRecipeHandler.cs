@@ -19,5 +19,7 @@ namespace MeallyApp.Resources.Services
         public List<Recipe> GetRecipeList();
 
         public Task<List<Ingredients.Label>> GetLabels();
+
+        public Task FilterRecipes(Ingredients.Label label);
     }
 }

@@ -2,27 +2,32 @@
 
 namespace MeallyApp.Resources.Ingredients
 {
-    public class Ingredient
+    public class Ingredient : IEquatable<Ingredient>
     {
         public Ingredient() {;}
 
-        public Ingredient(Ingredients ingredient, string image)
+        public Ingredient(string DisplayName, string image)
         {
-            this.ingredient = ingredient;
-            DisplayName = this.ToString();
+            this.DisplayName = DisplayName;
             this.Image = image;
         }
 
-        public Ingredients ingredient { get; set; }
+        public int Id { get; set; }
 
         public string DisplayName { get; set; } 
 
         public string Image { get; set; }
 
+        public bool Equals(Ingredient other)
+        {
+            if (DisplayName == other.DisplayName) { return true; }
+            return false;   
+        }
+
         // Regex usage
         public override string ToString()
         {
-            return Regex.Replace(ingredient.ToString(), "[a-z][A-Z]", m => $"{m.Value[0]} {char.ToLower(m.Value[1])}");
+            return DisplayName;
         }
 
     }
