@@ -33,7 +33,11 @@ namespace RecipeDatabaseDomain
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MeallyRecipeDatabase;Trusted_Connection=True;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MeallyRecipeDatabase;Trusted_Connection=True;");
+
+            }
         }
     }
 }

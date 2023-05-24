@@ -54,17 +54,17 @@ public partial class UploadRecipePage : ContentPage
             // Add request for sending inventory to API
             try
             {
-                var requestBody = new
-                {
-                    Username = User.UserName,
-                    RecipeName = RecipeName.Text,
-                    RecipeDescription = RecipeDescription.Text,
-                    RecipeCreationTime = DateTime.Now,
-                    RecipeMakeTime = TimePicker.Time,
-                    Ingredients = new List<Ingredient>(selectionIngredients),
-                    Labels = new List<Resources.Ingredients.Label>(selectionLabels)
-                };
-                Debug.WriteLine(JsonConvert.SerializeObject(requestBody));
+                //var requestBody = new
+                //{
+                //    Username = User.UserName,
+                //    RecipeName = RecipeName.Text,
+                //    RecipeDescription = RecipeDescription.Text,
+                //    RecipeCreationTime = DateTime.Now,
+                //    RecipeMakeTime = TimePicker.Time,
+                //    Ingredients = new List<Ingredient>(selectionIngredients),
+                //    Labels = new List<Resources.Ingredients.Label>(selectionLabels)
+                //};
+                //Debug.WriteLine(JsonConvert.SerializeObject(requestBody));
                 var result = await $"{User.BaseUrl}/api/food/uploadrecipe".PostJsonAsync(new
                 {
                     Username = User.UserName,
