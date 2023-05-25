@@ -3,7 +3,6 @@ using MeallyApp.Resources.Services;
 using MeallyApp.Resources.ViewIngredients;
 using MeallyApp.Resources.ExceptionHandling;
 using MeallyApp.Resources.EventArguments;
-using WinRT;
 using MeallyApp.Resources.Ingredients;
 
 namespace MeallyApp;
