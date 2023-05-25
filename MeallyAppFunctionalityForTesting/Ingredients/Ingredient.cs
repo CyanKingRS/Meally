@@ -4,7 +4,7 @@ namespace MeallyApp.Resources.Ingredients
 {
     public class Ingredient
     {
-        public Ingredient() {;}
+        public Ingredient() {; }
 
         public Ingredient(Ingredients ingredient, string image)
         {
@@ -15,7 +15,7 @@ namespace MeallyApp.Resources.Ingredients
 
         public Ingredients ingredient { get; set; }
 
-        public string DisplayName { get; set; } 
+        public string DisplayName { get; set; }
 
         public string Image { get; set; }
 

@@ -7,7 +7,7 @@
         public List<Ingredient> Ingredients { get; set; }
         public string RecipeInstructions { get; set; }
 
-        public string Image { get; set;}
+        public string Image { get; set; }
 
         public double Compatibility { get; set; } = 0;
 

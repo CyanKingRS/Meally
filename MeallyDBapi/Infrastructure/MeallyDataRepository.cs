@@ -44,7 +44,8 @@ namespace MeallyDBapi.Infrastructure
             for (int i = 0; i < filteredRecipes.Count; i++)
             {
                 List<Ingredient> ingredients = GetRecipeIngredients(filteredRecipes[i].Id);
-                recipeViewModels.Add(new RecipeViewModel(filteredRecipes[i], ingredients));
+                List<Label> labels = GetRecipeLabels(filteredRecipes[i].Id);
+                recipeViewModels.Add(new RecipeViewModel(filteredRecipes[i], ingredients, labels));
             }
 
             return recipeViewModels;
@@ -59,17 +60,19 @@ namespace MeallyDBapi.Infrastructure
             for (int i = 0; i < recipes.Count; i++)
             {
                 List<Ingredient> ingredients = GetRecipeIngredients(recipes[i].Id);
-                recipeViewModels.Add(new RecipeViewModel(recipes[i], ingredients));
+                List<Label> labels = GetRecipeLabels(recipes[i].Id);
+
+                recipeViewModels.Add(new RecipeViewModel(recipes[i], ingredients, labels));
             }
 
             return recipeViewModels;
         }
 
-        public List<Ingredient> GetRecipe(int id)
+        public Recipe GetRecipe(int id)
         {
             Recipe recipe = context.Recipes.First(x => x.Id == id);
-            List<Ingredient> ingredients = GetRecipeIngredients(id);
-            return ingredients;
+            
+            return recipe;
         }
 
         private List<Ingredient> GetRecipeIngredients(int recipeId)
@@ -89,9 +92,31 @@ namespace MeallyDBapi.Infrastructure
             return ingredientsForRecipe;
         }
 
+        private List<Label> GetRecipeLabels(int recipeId)
+        {
+            List<LabelRecipe> recipeLabels = context.LabelRecipes.Where(x => x.RecipeID == recipeId).ToList();
+
+            List<Label> labelsForRecipe = new List<Label>();
+            for (int i = 0; i < recipeLabels.Count; ++i)
+            {
+                Label? labelToAdd = GetLabel(recipeLabels[i].LabelID);
+                if (labelToAdd != null)
+                {
+                    labelsForRecipe.Add(labelToAdd);
+                }
+            }
+
+            return labelsForRecipe;
+        }
+
         private Ingredient? GetIngredient(int ingredientId)
         {
             return context.Ingredients.FirstOrDefault(x => x.Id == ingredientId);
+        }
+
+        private Label? GetLabel(int labelId)
+        {
+            return context.Labels.FirstOrDefault(x => x.Id == labelId);
         }
 
         private List<Ingredient> GetUserInventory(int userId)
@@ -240,6 +265,52 @@ namespace MeallyDBapi.Infrastructure
             }
         }
 
-        
+        public List<RecipeDatabaseDomain.Models.Label> GetLabels()
+        {
+            return context.Labels.Where(x => x.Id > 0).ToList();
+
+        }
+
+        public bool UploadRecipe(NewRecipe request)
+        {
+            int UserId = GetUserIdByUsername(request.Username);
+            List<RecipeIngredient> temp = new();
+            List<LabelRecipe> labels = new();
+            foreach (var ingr in request.Ingredients)
+            {
+                RecipeIngredient newRI = new RecipeIngredient()
+                {
+                    IngredientID = ingr.Id
+                };
+
+                temp.Add(newRI);
+            }
+
+            foreach (var lbl in request.Labels)
+            {
+                LabelRecipe newLR = new LabelRecipe()
+                {
+                    LabelID = lbl.Id,
+                };
+                labels.Add(newLR);
+            }
+
+            Recipe newRecipe = new Recipe()
+            {
+                Name = request.RecipeName,
+                RecipeInstructions = request.RecipeDescription,
+                RecipeMakeTime = request.RecipeMakeTime,
+                RecipeUploadDate = request.RecipeCreationTime,
+                RecipeIngredients = temp,
+                LabelRecipes= labels
+            };
+
+            context.Recipes.Add(newRecipe);
+
+            context.SaveChanges();
+
+            return true;
+        }
+
     }
 }

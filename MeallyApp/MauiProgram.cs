@@ -37,6 +37,10 @@ public static class MauiProgram
 
         builder.Services.AddTransient<RecipePage>();
 
+		builder.Services.AddSingleton<UploadRecipePage>();
+
+		builder.Services.AddSingleton<UploadRecipeViewModel>();
+
 		builder.Services.AddSingleton<IExceptionLogger, ExceptionLogger>();
 
 		builder.Services.AddSingleton<IRecipeHandler, RecipeHandler>();

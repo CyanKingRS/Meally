@@ -14,17 +14,26 @@ namespace RecipeDatabaseDomain.ViewModels
 
         public List<Ingredient>? Ingredients { get; set; }
 
+        public List<Label> Labels { get; set; }
+
         public string? RecipeInstructions { get; set; }
 
         public string? Image { get; set; }
 
-        public RecipeViewModel(Recipe recipe, List<Ingredient> ingredients)
+        public DateTime RecipeUploadDate { get; set; }
+
+        public TimeSpan RecipeMakeTime { get; set; }
+
+        public RecipeViewModel(Recipe recipe, List<Ingredient> ingredients, List<Label> labels)
         {
             Id = recipe.Id;
             Name = recipe.Name;
             Ingredients = ingredients;
             RecipeInstructions = recipe.RecipeInstructions;
             Image = recipe.Image;
+            RecipeUploadDate = recipe.RecipeUploadDate;
+            RecipeMakeTime = recipe.RecipeMakeTime;
+            Labels = labels;
         }
     }
 }

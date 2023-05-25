@@ -1,8 +1,11 @@
-﻿using MeallyApp.Resources.EventArguments;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using MeallyApp.Resources.EventArguments;
 using MeallyApp.Resources.Ingredients;
 using MeallyApp.UserData;
 using Newtonsoft.Json;
 using Npgsql;
+using System.Collections.ObjectModel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MeallyApp.Resources.Services
 {
@@ -11,6 +14,8 @@ namespace MeallyApp.Resources.Services
         // This is a list of all recipes
 
         private List<Recipe> database = new List<Recipe>();
+
+        private List<Ingredients.Label> labels = new();
 
         public IDatabaseConnection dbConnection;
 
@@ -100,6 +105,48 @@ namespace MeallyApp.Resources.Services
             }
         }
 
-    }
+        public async Task<List<Ingredients.Label>> GetLabels()
+        {
+            var client = new HttpClient();
+            string url = $"{User.BaseUrl}/api/food/getlabels";
+            client.BaseAddress = new Uri(url);
+            HttpResponseMessage response = await client.GetAsync("");
+            if (response.IsSuccessStatusCode)
+            {
+                string content = response.Content.ReadAsStringAsync().Result;
+                labels = JsonConvert.DeserializeObject<List<Ingredients.Label>>(content);
+                return labels;
+            }
+            else
+            { return labels; }
+        }
+        public async Task FilterRecipes(Ingredients.Label label)
+        {
+            var client = new HttpClient();
+
+            string url = $"{User.BaseUrl}/api/food/getrecipes";
+            client.BaseAddress = new Uri(url);
+            HttpResponseMessage respone = await client.GetAsync("");
+            if (respone.IsSuccessStatusCode)
+            {
+                string content = respone.Content.ReadAsStringAsync().Result;
+                database = JsonConvert.DeserializeObject<List<Recipe>>(content);
+                List<Recipe> tmp = new ();
+                foreach (var r in database)
+                {
+                    foreach (var l in r.Labels) 
+                    {
+                        if (l.Id == label.Id)
+                        {
+                            tmp.Add(r);
+                        }
+                    }
+                }
+                database = tmp;
+            }
+         
+        }
+
+    }  
 
 }

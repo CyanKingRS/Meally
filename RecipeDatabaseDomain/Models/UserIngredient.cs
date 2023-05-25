@@ -9,6 +9,8 @@ namespace RecipeDatabaseDomain.Models
 {
     public class UserIngredient
     {
+
+        public UserIngredient() { }
         public UserIngredient(int userId, int ingredientId)
         {
             UserId = userId;

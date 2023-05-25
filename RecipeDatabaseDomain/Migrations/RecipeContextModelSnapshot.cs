@@ -17,10 +17,10 @@ namespace RecipeDatabaseDomain.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.12")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("RecipeDatabaseDomain.Models.Ingredient", b =>
                 {
@@ -28,7 +28,7 @@ namespace RecipeDatabaseDomain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -42,13 +42,51 @@ namespace RecipeDatabaseDomain.Migrations
                     b.ToTable("Ingredients");
                 });
 
+            modelBuilder.Entity("RecipeDatabaseDomain.Models.Label", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Labels");
+                });
+
+            modelBuilder.Entity("RecipeDatabaseDomain.Models.LabelRecipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LabelID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeID");
+
+                    b.ToTable("LabelRecipes");
+                });
+
             modelBuilder.Entity("RecipeDatabaseDomain.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -61,6 +99,12 @@ namespace RecipeDatabaseDomain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<TimeSpan>("RecipeMakeTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("RecipeUploadDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Recipes");
@@ -72,7 +116,7 @@ namespace RecipeDatabaseDomain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("Amount")
                         .HasColumnType("int");
@@ -96,7 +140,7 @@ namespace RecipeDatabaseDomain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
 
                     b.Property<string>("ConfirmPassword")
                         .IsRequired()
@@ -129,7 +173,7 @@ namespace RecipeDatabaseDomain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("IngredientId")
                         .HasColumnType("int");
@@ -140,6 +184,15 @@ namespace RecipeDatabaseDomain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserIngredients");
+                });
+
+            modelBuilder.Entity("RecipeDatabaseDomain.Models.LabelRecipe", b =>
+                {
+                    b.HasOne("RecipeDatabaseDomain.Models.Recipe", null)
+                        .WithMany("LabelRecipes")
+                        .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RecipeDatabaseDomain.Models.RecipeIngredient", b =>
@@ -153,6 +206,8 @@ namespace RecipeDatabaseDomain.Migrations
 
             modelBuilder.Entity("RecipeDatabaseDomain.Models.Recipe", b =>
                 {
+                    b.Navigation("LabelRecipes");
+
                     b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618

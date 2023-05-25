@@ -3,6 +3,7 @@ using MeallyApp.Resources.Services;
 using MeallyApp.Resources.ViewIngredients;
 using MeallyApp.Resources.ExceptionHandling;
 using MeallyApp.Resources.EventArguments;
+using MeallyApp.Resources.Ingredients;
 
 namespace MeallyApp;
 
@@ -15,7 +16,7 @@ public partial class FilterPage : ContentPage
     // 4. Delegate usage
 
     private ExceptionDelegate action;
-
+    private bool isPageCreated = false;
     private IExceptionLogger logger;
     private IDatabaseConnection databaseConnection;
     private IRecipeHandler recipeHandler;
@@ -81,8 +82,12 @@ public partial class FilterPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-
-        Load_Recipes();
+        if (!isPageCreated)
+        {
+            Load_Recipes();
+            isPageCreated= true;
+        }
+        
     }
 
     private async void SearchBar_SearchButtonPressed(object sender, EventArgs e)
@@ -98,5 +103,26 @@ public partial class FilterPage : ContentPage
             ViewModel.GetRecipesCommand.Execute(this);
         }
 
+    }
+
+    private async void LabelView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!Loader.IsRunning)
+        {
+            Loader.IsRunning = true;
+            CollectionView labelCollection = (CollectionView)sender;
+            if (labelCollection.SelectedItem != null)
+            {
+                await recipeHandler.FilterRecipes(labelCollection.SelectedItem as MeallyApp.Resources.Ingredients.Label);
+            }
+            else
+            {
+                await recipeHandler.GetRecipesAPI();
+            }
+            recipeHandler.SetComp(User.inventory);
+            recipeHandler.OrderDB();
+            Loader.IsRunning = false;
+            ViewModel.GetRecipesCommand.Execute(this);
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace MeallyDBapi.Controllers
         {
             //string username = HttpContext.Current.Request.QueryString["username"];
             //string password = Request.QueryString["password"];
-            Debug.WriteLine("Iejo i funkcija");
+            //Debug.WriteLine("Iejo i funkcija");
             List<Ingredient>? inventory = repository.VerifyUser(username, password);
             if (inventory != null)
             {
